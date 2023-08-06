@@ -10,4 +10,5 @@ Rails.application.routes.draw do
 
   post '/stkpush', to: 'm_pesas#stkpush'
   post '/callback_url', to: 'm_pesas#callback'
+  post 'stkquery', to: 'm_pesas#stkquery'
 end

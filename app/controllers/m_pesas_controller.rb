@@ -23,8 +23,8 @@ class MPesasController < ApplicationController
             'PartyA': phoneNumber,
             'PartyB': business_short_code,
             'PhoneNumber': phoneNumber,
-            'CallBackURL': "https://b091-197-139-44-10.ngrok-free.app/callback",
-            'AccountReference': 'Trial ROR Mpesa',
+            'CallBackURL': "https://3589-102-220-169-34.ngrok-free.app/callback",
+            'AccountReference': 'FOOD CHAP CHAP',
             'TransactionDesc': "ROR trial"
         }.to_json
         
@@ -86,7 +86,46 @@ class MPesasController < ApplicationController
         render plain: "Callback received successfully", status: :ok
     end
 
+    def stkquery
+        url = "https://sandbox.safaricom.co.ke/mpesa/stkpushquery/v1/query"
+        timestamp = "#{Time.now.strftime "%Y%m%d%H%M%S"}"
+        business_short_code = "174379"
+        password = Base64.strict_encode64("#{business_short_code}#{"bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"}#{timestamp}")
+        payload = {
+        'BusinessShortCode': business_short_code,
+        'Password': password,
+        'Timestamp': timestamp,
+        'CheckoutRequestID': params[:checkoutRequestID]
+        }.to_json
+
+        headers = {
+        Content_type: 'application/json',
+        Authorization: "Bearer #{ get_access_token }"
+        }
+
+        response = RestClient::Request.new({
+        method: :post,
+        url: url,
+        payload: payload,
+        headers: headers
+        }).execute do |response, request|
+        case response.code
+        when 500
+        [ :error, JSON.parse(response.to_str) ]
+        when 400
+        [ :error, JSON.parse(response.to_str) ]
+        when 200
+        [ :success, JSON.parse(response.to_str) ]
+        else
+        fail "Invalid response #{response.to_str} received."
+        end
+        end
+        render json: response
+    end
+
+
     ## private functions
+
 
     private
 

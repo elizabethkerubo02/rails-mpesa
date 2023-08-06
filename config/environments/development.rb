@@ -8,7 +8,14 @@ Rails.application.configure do
   # since you don't have to restart the web server when you make code changes.
   config.cache_classes = false
 
-  config.hosts << "cc59-197-139-44-10.ngrok-free.app"
+  # config.hosts << "1b17-102-220-169-34.ngrok-free.app"
+  # config.hosts << /[a-z0-9]+\.ngrok\-free\.app/
+  # config.hosts << /[a-z0-9]+\.ngrok\.io/
+  # config.hosts << /[a-z0-9\-]+\.ngrok-free\.app/
+  # config.hosts.clear
+
+  config.hosts << /.*\.ngrok\.io/
+  config.hosts << /.*\.ngrok-free\.app/
 
 
 
